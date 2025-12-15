@@ -1,0 +1,18 @@
+<div class="dashboard-card">
+  <h2>My Dashboard</h2>
+  <p>This is a placeholder component with some individual styling.</p>
+
+  <h3>User Details:</h3>
+  <pre>{{ user | json }}</pre>
+
+  <h3>Calculations:</h3>
+  <p>Count: {{ count }}</p>
+  <p>Double Count: {{ doubleCount }}</p>
+
+  <h3>Data from Service:</h3>
+  <ul>
+    @for (item of data; track item) {
+      <li>{{ item }}</li>
+    }
+  </ul>
+</div>

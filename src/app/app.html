@@ -1,0 +1,21 @@
+<header>
+  <h1>Life Gamification</h1>
+  <nav>
+    <a routerLink="/dashboard">Dashboard</a>
+    <a routerLink="/profile">Profile</a>
+    <a routerLink="/achievements">Achievements</a>
+    <a *ngIf="!authService.isLoggedIn()" routerLink="/login">Login</a>
+    <a *ngIf="authService.isLoggedIn()" (click)="logout()">Logout</a>
+  </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<div class="task-explanation">
+  <h3>Task T03_06 Explanation</h3>
+  <p>
+    This demonstrates the use of routing in Angular. The menu above uses <code>routerLink</code> to navigate between the Dashboard and Profile components. The <code>&lt;router-outlet&gt;</code> below is where the routed components are displayed.
+  </p>
+</div>

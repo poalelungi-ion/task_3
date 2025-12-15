@@ -1,0 +1,24 @@
+<h2>Achievements & Quests</h2>
+
+<div class="task-explanation">
+  <h3>Task T03_07 Explanation</h3>
+  <p>
+    This component displays a list of heterogeneous entities (achievements and quests) received from a service. The output is adjusted to the type of entity, showing different information for each type.
+  </p>
+</div>
+
+<div class="entities-container">
+  <div *ngFor="let entity of entities" class="entity-card">
+    <ng-container *ngIf="isQuest(entity)">
+      <h3>Quest: {{ entity.title }}</h3>
+      <p>{{ entity.description }}</p>
+      <p>Reward: {{ entity.reward }}</p>
+      <p>Status: {{ entity.completed ? 'Completed' : 'In Progress' }}</p>
+    </ng-container>
+    <ng-container *ngIf="isAchievement(entity)">
+      <h3>Achievement: {{ entity.title }}</h3>
+      <p>{{ entity.description }}</p>
+      <p>Status: {{ entity.unlocked ? 'Unlocked' : 'Locked' }}</p>
+    </ng-container>
+  </div>
+</div>

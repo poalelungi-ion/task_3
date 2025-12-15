@@ -1,0 +1,29 @@
+<h2>Login</h2>
+
+<div class="task-explanation">
+  <h3>Task T03_08 Explanation</h3>
+  <p>
+    This component demonstrates the use of Reactive Forms in Angular to create a login form. The form includes validation to ensure that both the username and password fields are filled out before submission.
+  </p>
+</div>
+
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input id="username" type="text" formControlName="username">
+    <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="error">Username is required.</div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input id="password" type="password" formControlName="password">
+    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">Password is required.</div>
+  </div>
+
+  <div class="form-group remember-me">
+    <input id="rememberMe" type="checkbox" formControlName="rememberMe">
+    <label for="rememberMe">Remember Me</label>
+  </div>
+
+  <button type="submit" [disabled]="loginForm.invalid">Log In</button>
+</form>
