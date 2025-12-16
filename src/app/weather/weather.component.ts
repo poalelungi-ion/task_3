@@ -4,6 +4,7 @@ import { LocationService } from '../location.service';
 import { WeatherService } from '../weather.service';
 import { StyleService, StyleAdvice } from '../style.service';
 import { Weather } from '../weather';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-weather',
@@ -24,6 +25,7 @@ export class WeatherComponent implements OnInit {
     private locationService: LocationService,
     private weatherService: WeatherService,
     private styleService: StyleService
+    , private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -47,10 +49,13 @@ export class WeatherComponent implements OnInit {
           next: (weatherData) => {
             console.log('[WeatherComponent] Got weather:', weatherData);
             this.weather = weatherData;
+            // Ensure template updates immediately
+            try { this.cd.detectChanges(); } catch (e) { /* noop */ }
 
             this.styleService.getStyleAdvice(weatherData.current_weather).subscribe({
               next: (advice) => {
                 this.styleAdvice = advice;
+                try { this.cd.detectChanges(); } catch (e) { /* noop */ }
               },
               error: (err) => {
                 console.error('Error getting style advice:', err);
@@ -83,6 +88,7 @@ export class WeatherComponent implements OnInit {
       next: (weatherData) => {
         console.log('[WeatherComponent] Got fallback weather:', weatherData);
         this.weather = weatherData;
+        try { this.cd.detectChanges(); } catch (e) { /* noop */ }
       },
       error: (err) => {
         console.error('Error getting fallback weather:', err);
