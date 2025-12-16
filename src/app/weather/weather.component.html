@@ -1,0 +1,34 @@
+<div class="weather-container">
+  <div *ngIf="weather; else noWeather">
+    <div class="weather-card">
+      <div class="left">
+        <div class="temp">{{ weather.current_weather.temperature }}°C</div>
+        <div class="desc">{{ getWeatherDescription(weather.current_weather.weathercode) }}</div>
+        <div class="small">Windspeed: {{ weather.current_weather.windspeed }} m/s</div>
+      </div>
+      <div class="right">
+        <div class="advice">
+          <h3>Style Advice</h3>
+          <div *ngIf="styleAdvice; else loadingAdvice">
+            <div class="mood">{{ styleAdvice.mood }}</div>
+            <div class="style">{{ styleAdvice.style }}</div>
+          </div>
+          <ng-template #loadingAdvice>
+            <div class="advice-loading">Loading style advice...</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noWeather>
+    <h3>No Weather Data</h3>
+    <div *ngIf="error; else waiting">
+      <p class="error">Error: {{ error.message || (error | json) }}</p>
+      <p>Using fallback location so you can still see sample data. Please allow location access to get your local weather.</p>
+    </div>
+    <ng-template #waiting>
+      <p class="loading">Waiting for location... Please allow geolocation in your browser.</p>
+    </ng-template>
+  </ng-template>
+</div>

@@ -4,6 +4,7 @@
     <a routerLink="/dashboard">Dashboard</a>
     <a routerLink="/profile">Profile</a>
     <a routerLink="/achievements">Achievements</a>
+    <a routerLink="/weather">Weather</a>
     <a *ngIf="!authService.isLoggedIn()" routerLink="/login">Login</a>
     <a *ngIf="authService.isLoggedIn()" (click)="logout()">Logout</a>
   </nav>
