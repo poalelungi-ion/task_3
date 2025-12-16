@@ -17,6 +17,8 @@ export class WeatherComponent implements OnInit {
   weather: Weather | undefined;
   styleAdvice: StyleAdvice | undefined;
   error: any;
+  private fallbackTimer: any;
+  private usedFallback = false;
 
   constructor(
     private locationService: LocationService,
@@ -25,9 +27,22 @@ export class WeatherComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Component-level safety timer: if geolocation never responds, use fallback after 6s
+    this.fallbackTimer = window.setTimeout(() => {
+      if (!this.weather && !this.usedFallback) {
+        console.warn('[WeatherComponent] Component-level location timeout — using fallback');
+        this.error = { message: 'Timeout getting location (no response). Using fallback location.' };
+        this.usedFallback = true;
+        this.useFallbackWeather();
+      }
+    }, 6000);
     this.locationService.getCurrentLocation().subscribe({
       next: (coords) => {
         console.log('[WeatherComponent] Got location:', coords);
+        if (this.fallbackTimer) {
+          clearTimeout(this.fallbackTimer);
+          this.fallbackTimer = undefined;
+        }
         this.weatherService.getWeather(coords.latitude, coords.longitude).subscribe({
           next: (weatherData) => {
             console.log('[WeatherComponent] Got weather:', weatherData);
@@ -53,19 +68,24 @@ export class WeatherComponent implements OnInit {
         console.error('Error getting location:', error);
         // Store the error so the UI can show it
         this.error = { message: error?.message ?? error };
+        if (!this.usedFallback) {
+          this.usedFallback = true;
+          this.useFallbackWeather();
+        }
+      }
+    });
+  }
 
-        // Fallback: try fetching weather for a default location so users still see data
-        const fallback = { latitude: 51.5074, longitude: -0.1278 }; // London
-        console.log('[WeatherComponent] Using fallback coords:', fallback);
-        this.weatherService.getWeather(fallback.latitude, fallback.longitude).subscribe({
-          next: (weatherData) => {
-            console.log('[WeatherComponent] Got fallback weather:', weatherData);
-            this.weather = weatherData;
-          },
-          error: (err) => {
-            console.error('Error getting fallback weather:', err);
-          }
-        });
+  private useFallbackWeather() {
+    const fallback = { latitude: 51.5074, longitude: -0.1278 }; // London
+    console.log('[WeatherComponent] Using fallback coords:', fallback);
+    this.weatherService.getWeather(fallback.latitude, fallback.longitude).subscribe({
+      next: (weatherData) => {
+        console.log('[WeatherComponent] Got fallback weather:', weatherData);
+        this.weather = weatherData;
+      },
+      error: (err) => {
+        console.error('Error getting fallback weather:', err);
       }
     });
   }
